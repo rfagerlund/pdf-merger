@@ -115,10 +115,15 @@ def main() -> None:
         
         use_password = st.checkbox("Skydda filen med lösenord")
         password_input = ""
+        password_confirm = ""
         
         if use_password:
             password_input = st.text_input(
                 "Ange lösenord (krav: minst en stor bokstav och en siffra):", 
+                type="password"
+            )
+            password_confirm = st.text_input(
+                "Bekräfta lösenord:", 
                 type="password"
             )
         
@@ -127,9 +132,14 @@ def main() -> None:
                 st.warning("Inga filer finns att slå ihop.")
                 return
                 
-            if use_password and not validate_password(password_input):
-                st.error("Lösenordet uppfyller inte kraven. Se till att ha minst en stor bokstav och en siffra.")
-                return
+            # Om lösenord används, validera och kontrollera att de matchar
+            if use_password:
+                if password_input != password_confirm:
+                    st.error("Lösenorden matchar inte. Vänligen skriv in exakt samma lösenord i båda fälten.")
+                    return
+                if not validate_password(password_input):
+                    st.error("Lösenordet uppfyller inte kraven. Se till att ha minst en stor bokstav och en siffra.")
+                    return
                 
             if not output_name.lower().endswith(".pdf"):
                 output_name += ".pdf"
