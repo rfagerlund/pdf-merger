@@ -108,15 +108,11 @@ def main() -> None:
         # 2. Dra-och-släpp sortering
         sorted_names = sort_items(original_names)
         
-        # 2.5 Dynamisk, numrerad visning i kolumner
+        # 2.5 Dynamisk, numrerad visning rad för rad
         st.markdown("### Din valda exportordning:")
-        # Skapa två kolumner (kan ökas till 3 om du föredrar det, genom st.columns(3))
-        cols = st.columns(2)
         
         for index, name in enumerate(sorted_names):
-            # Placera varannan fil i vänster respektive höger kolumn
-            col = cols[index % 2]
-            col.markdown(f"**{index + 1}.** {name}")
+            st.markdown(f"**{index + 1}.** {name}")
         
         st.divider()
         
