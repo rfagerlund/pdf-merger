@@ -4,6 +4,26 @@ from io import BytesIO
 from streamlit.runtime.uploaded_file_manager import UploadedFile
 from streamlit_sortables import sort_items
 
+def render_sidebar() -> None:
+    """
+    Skapar och visar en sidomeny (sidebar) med app-detaljer och instruktioner.
+    """
+    st.sidebar.title("ℹ️ App Details")
+    st.sidebar.markdown(
+        """
+        **PDF-Sammanslagning** är ett verktyg för att snabbt och säkert slå ihop flera PDF-dokument till ett.
+        
+        ### Funktioner:
+        - **Dra-och-släpp:** Ladda upp och sortera filerna exakt som du vill ha dem.
+        - **Kryptering:** Möjlighet att lösenordsskydda exporten för extra säkerhet.
+        - **Minneshantering:** Filerna hanteras i datorns minne och sparas aldrig på någon extern server.
+        
+        ---
+        **Version:** 1.0.0  
+        **Utvecklare:** (Ditt namn här)
+        """
+    )
+
 def validate_password(password: str) -> bool:
     """
     Kontrollerar om lösenordet uppfyller säkerhetskraven.
@@ -40,7 +60,7 @@ def merge_pdfs(ordered_files: list[UploadedFile], password: str = "") -> BytesIO
         for pdf_file in ordered_files:
             merger.append(pdf_file)
             
-        # Lägg till lösenordsskydd om användaren har valt det och fyllt i ett godkänt lösenord
+        # Lägg till lösenordsskydd om användaren har fyllt i ett godkänt lösenord
         if password:
             merger.encrypt(password)
             
@@ -61,7 +81,9 @@ def main() -> None:
     """Huvudfunktionen som bygger Streamlit-gränssnittet."""
     st.set_page_config(page_title="PDF-Sammanslagning", page_icon="📄")
     
-    # Lade till PDF-ikonen i rubriken här
+    # Anropa funktionen som bygger vår sidebar
+    render_sidebar()
+    
     st.title("📄 Slå ihop PDF-filer")
     
     # 1. Filuppladdning
@@ -86,7 +108,6 @@ def main() -> None:
         # 3. Namnge, lösenordsskydda och exportera
         output_name = st.text_input("Vad ska den nya filen heta?", value="sammanslagen.pdf")
         
-        # UI för lösenordsskydd
         use_password = st.checkbox("Skydda filen med lösenord")
         password_input = ""
         
@@ -101,7 +122,6 @@ def main() -> None:
                 st.warning("Inga filer finns att slå ihop.")
                 return
                 
-            # Validera lösenordet innan vi försöker slå ihop filerna
             if use_password and not validate_password(password_input):
                 st.error("Lösenordet uppfyller inte kraven. Se till att ha minst en stor bokstav och en siffra.")
                 return
@@ -112,7 +132,6 @@ def main() -> None:
             ordered_files = [file_dict[name] for name in sorted_names]
             
             with st.spinner("Slår ihop filerna..."):
-                # Skicka med lösenordet till funktionen (blir en tom sträng om checkboxen inte är ipekad)
                 merged_file = merge_pdfs(ordered_files, password_input if use_password else "")
                 
                 if merged_file:
