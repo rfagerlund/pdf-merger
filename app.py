@@ -6,7 +6,8 @@ from streamlit_sortables import sort_items
 
 def render_sidebar() -> None:
     """
-    Skapar och visar en sidomeny (sidebar) med app-detaljer och instruktioner.
+    Skapar och visar en sidomeny (sidebar) med app-detaljer, 
+    upphovsrättsinformation och instruktioner.
     """
     st.sidebar.title("ℹ️ App Details")
     st.sidebar.markdown(
@@ -20,7 +21,11 @@ def render_sidebar() -> None:
         
         ---
         **Version:** 1.0.0  
-        **Utvecklare:** (Ditt namn här)
+        **Utvecklare:** Rickard Fagerlund
+        
+        ### Upphovsrätt & Licens
+        © 2026 Rickard Fagerlund. Alla rättigheter förbehållna.  
+        *Denna mjukvara, applikation och dess källkod får inte kopieras, distribueras, säljas eller modifieras utan uttryckligt skriftligt tillstånd från upphovsrättsinnehavaren.*
         """
     )
 
