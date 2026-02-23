@@ -84,7 +84,7 @@ def merge_pdfs(ordered_files: list[UploadedFile], password: str = "") -> BytesIO
 
 def main() -> None:
     """Huvudfunktionen som bygger Streamlit-gränssnittet."""
-    st.set_page_config(page_title="PDF-Sammanslagning", page_icon="📄")
+    st.set_page_config(page_title="PDF-Sammanslagning", page_icon="📄", layout="centered")
     
     # Anropa funktionen som bygger vår sidebar
     render_sidebar()
@@ -107,6 +107,16 @@ def main() -> None:
         
         # 2. Dra-och-släpp sortering
         sorted_names = sort_items(original_names)
+        
+        # 2.5 Dynamisk, numrerad visning i kolumner
+        st.markdown("### Din valda exportordning:")
+        # Skapa två kolumner (kan ökas till 3 om du föredrar det, genom st.columns(3))
+        cols = st.columns(2)
+        
+        for index, name in enumerate(sorted_names):
+            # Placera varannan fil i vänster respektive höger kolumn
+            col = cols[index % 2]
+            col.markdown(f"**{index + 1}.** {name}")
         
         st.divider()
         
